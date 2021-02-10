@@ -1,6 +1,8 @@
 require 'oystercard'
 
 describe Oystercard do
+  let(:station){ double :station }
+  
   it 'has a balance of 0 by default' do
     expect(subject.balance).to eq(0)
   end
@@ -25,11 +27,11 @@ describe Oystercard do
   describe '#touch_in' do
     it 'changes in_journey status to true' do
       subject.instance_variable_set(:@balance, 5)
-      subject.touch_in
+      subject.touch_in(station)
       expect(subject).to be_in_journey
     end
     it 'should raise an error if the balance is less than the minimum fare' do
-      expect { subject.touch_in }.to raise_error("balance too low")
+      expect { subject.touch_in(station) }.to raise_error("balance too low")
     end
   end
 
@@ -49,4 +51,19 @@ describe Oystercard do
     end
   end
 
+  describe "station history" do
+    before (:each) do
+      subject.instance_variable_set(:@balance, 10)
+      subject.touch_in(station)
+    end
+
+    it "remembers the entry station on touch in" do
+      expect(subject.entry_station).to eq station
+    end
+
+    it "forgets the entry station on touch out" do
+      subject.touch_out
+      expect(subject.entry_station).to eq nil
+    end
+  end
 end
