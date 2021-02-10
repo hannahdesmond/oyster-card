@@ -22,26 +22,14 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    it 'responds to a deduct method' do
-      expect(subject).to respond_to(:deduct).with(1).argument
-    end
-    it 'should deduct the fare from the balance' do
-      subject.top_up(10)
-      expect(subject.deduct(5)).to eq(5)
-    end
-  end
-
   describe '#touch_in' do
-    it 'responds to a touch_in method' do
-      expect(subject).to respond_to(:touch_in)
-    end
     it 'changes in_journey status to true' do
+      subject.instance_variable_set(:@balance, 5)
       subject.touch_in
       expect(subject).to be_in_journey
     end
     it 'should raise an error if the balance is less than the minimum fare' do
-      expect { subject.touch_in }.to raise_error("balance too low")  
+      expect { subject.touch_in }.to raise_error("balance too low")
     end
   end
 
@@ -52,13 +40,12 @@ describe Oystercard do
   end
 
   describe '#touch_out' do
-    it 'responds to a touch_out method' do
-      expect(subject).to respond_to(:touch_out)
-    end
     it 'changes in_journey status to false' do
-      subject.touch_in
       subject.touch_out
       expect(subject).not_to be_in_journey
+    end
+    it 'reduces the balance by minimum fare' do
+      expect { subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
     end
   end
 
