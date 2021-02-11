@@ -1,4 +1,5 @@
 require 'oystercard'
+require 'station'
 
 describe Oystercard do
   let(:station){ double :station }
@@ -67,26 +68,28 @@ describe Oystercard do
       subject.instance_variable_set(:@balance, 10)
       subject.touch_in(station)
     end
-
     it "remembers the entry station on touch in" do
       expect(subject.entry_station).to eq station
     end
-
     it "forgets the entry station on touch out" do
       subject.touch_out(exit_station)
       expect(subject.entry_station).to eq nil
     end
-
     it "pushes entry station to journey list" do
-      subject.touch_in(station)
       expect(subject.journey_list).to include started_journey
     end
-
     it "pushes exit station to journey list" do
-      subject.touch_in(station)
       subject.touch_out(exit_station)
       expect(subject.journey_list).to include completed_journey
     end
-
   end
 end
+
+  describe Station do
+    it 'responds a name' do
+      expect(subject).to respond_to(:name)
+    end
+    it 'returns a name' do
+    # expect(subject.name).to be true
+    end
+  end
