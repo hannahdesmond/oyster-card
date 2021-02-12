@@ -84,12 +84,3 @@ describe Oystercard do
     end
   end
 end
-
-  describe Station do
-    it 'responds a name' do
-      expect(subject).to respond_to(:name)
-    end
-    it 'returns a name' do
-    # expect(subject.name).to be true
-    end
-  end
